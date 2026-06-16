@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>100 Años Riva — Control de acceso</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #f5f7fa;
+    color: #1a1a1a;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+  }
+
+  .page { width: 100%; max-width: 480px; }
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #003865;
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .header-logo {
+    font-family: 'Futura', 'Century Gothic', 'Trebuchet MS', sans-serif;
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    color: #ffffff;
+    text-transform: lowercase;
+    line-height: 1;
+  }
+
+  .header-sub {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-top: 4px;
+  }
+
+  .badge {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.6);
+    padding: 5px 10px;
+    border-radius: 4px;
+  }
+
+  .card {
+    background: #ffffff;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+
+  .card-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #aaaaaa;
+    padding: 1rem 1.25rem 0.75rem;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  #reader { width: 100%; min-height: 260px; background: #f5f7fa; }
+  #reader video { width: 100% !important; }
+
+  .scanner-hint {
+    padding: 0.75rem 1.25rem;
+    font-size: 12px;
+    color: #cccccc;
+    text-align: center;
+  }
+
+  /* Manual */
+  .manual-body { padding: 1rem 1.25rem; }
+
+  .manual-row { display: flex; gap: 8px; }
+
+  #manual-input {
+    flex: 1;
+    background: #f5f7fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    color: #1a1a1a;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  #manual-input:focus { border-color: #003865; }
+  #manual-input::placeholder { color: #cccccc; }
+
+  .validate-btn {
+    padding: 0.75rem 1.25rem;
+    background: #003865;
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+
+  .validate-btn:hover { background: #004a82; }
+
+  /* Result */
+  #result-card { display: none; border-radius: 8px; overflow: hidden; margin-bottom: 1rem; }
+  #result-card.visible { display: block; }
+
+  .result-inner { padding: 1.5rem; }
+
+  #result-card.ok { background: #edf7f1; border: 1px solid #b3dfc4; }
+  #result-card.fail { background: #fdf0f0; border: 1px solid #f0c0c0; }
+
+  .result-top { display: flex; align-items: flex-start; justify-content: space-between; }
+
+  .result-status {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  #result-card.ok .result-status { color: #2a7a4a; }
+  #result-card.fail .result-status { color: #aa3333; }
+
+  .result-name { font-size: 24px; font-weight: 500; color: #1a1a1a; margin-bottom: 2px; }
+  .result-company { font-size: 13px; color: #888888; margin-bottom: 0.75rem; }
+  .result-msg { font-size: 13px; color: #888888; }
+
+  .result-mark { font-size: 44px; line-height: 1; }
+  #result-card.ok .result-mark { color: #2a7a4a; }
+  #result-card.fail .result-mark { color: #aa3333; }
+
+  .reset-btn {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: transparent;
+    border: 1px solid #dddddd;
+    border-radius: 6px;
+    color: #aaaaaa;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .reset-btn:hover { border-color: #aaaaaa; color: #555555; }
+
+  /* History */
+  .history-section { margin-top: 0.5rem; }
+
+  .history-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #cccccc;
+    margin-bottom: 0.75rem;
+    padding: 0 0.25rem;
+  }
+
+  #history-list { display: flex; flex-direction: column; gap: 6px; }
+
+  .history-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: #ffffff;
+    border-radius: 6px;
+    border: 1px solid #eeeeee;
+  }
+
+  .history-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .history-dot.ok { background: #2a9a5a; }
+  .history-dot.fail { background: #cc4444; }
+
+  .history-name { font-size: 13px; color: #333333; flex: 1; }
+  .history-time { font-size: 11px; color: #cccccc; }
+
+  .no-history { font-size: 13px; color: #cccccc; font-style: italic; padding: 0.25rem; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="header">
+    <div>
+      <div class="header-logo">riva</div>
+      <div class="header-sub">Control de acceso</div>
+    </div>
+    <div class="badge">100 años</div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Escáner de cámara</div>
+    <div id="reader"></div>
+    <div class="scanner-hint">Apuntá la cámara al código QR del invitado</div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Ingreso manual</div>
+    <div class="manual-body">
+      <div class="manual-row">
+        <input type="text" id="manual-input" placeholder="Código del invitado" autocomplete="off" />
+        <button class="validate-btn" id="btn-validate">Validar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="result-card">
+    <div class="result-inner">
+      <div class="result-top">
+        <div>
+          <div class="result-status" id="result-status"></div>
+          <div class="result-name" id="result-name"></div>
+          <div class="result-company" id="result-company"></div>
+          <div class="result-msg" id="result-msg"></div>
+        </div>
+        <div class="result-mark" id="result-mark"></div>
+      </div>
+      <button class="reset-btn" id="btn-reset">Escanear otro</button>
+    </div>
+  </div>
+
+  <div class="history-section">
+    <div class="history-label">Últimos ingresos</div>
+    <div id="history-list"><p class="no-history">Sin ingresos registrados aún.</p></div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+<script>
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzp0L4r95aQWrXroaZnT5Hv-SaEZGlFqw4U17ssRuEXHlSBjpnyKRTHHdB6HgWAnfQk/exec";
+
+  const history = [];
+  let scanning = true;
+
+  const scanner = new Html5Qrcode("reader");
+  scanner.start(
+    { facingMode: "environment" },
+    { fps: 10, qrbox: { width: 220, height: 220 } },
+    (decodedText) => {
+      if (!scanning) return;
+      scanning = false;
+      scanner.pause();
+      validate(decodedText.trim());
+    },
+    () => {}
+  ).catch(() => {
+    document.getElementById('reader').innerHTML = '<p style="color:#cccccc;font-size:13px;text-align:center;padding:2rem;">Cámara no disponible.<br>Usá el ingreso manual.</p>';
+  });
+
+  document.getElementById('btn-validate').addEventListener('click', () => {
+    const val = document.getElementById('manual-input').value.trim();
+    if (!val) return;
+    validate(val);
+  });
+
+  document.getElementById('manual-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const val = e.target.value.trim();
+      if (val) validate(val);
+    }
+  });
+
+  document.getElementById('btn-reset').addEventListener('click', () => {
+    document.getElementById('result-card').className = '';
+    document.getElementById('manual-input').value = '';
+    scanning = true;
+    try { scanner.resume(); } catch {}
+  });
+
+  async function validate(id) {
+    try {
+      const res = await fetch(`${SCRIPT_URL}?action=validate&id=${encodeURIComponent(id)}`);
+      const data = await res.json();
+      showResult(data, id);
+    } catch {
+      showResult({ ok: false, error: 'Error de conexión' }, id);
+    }
+  }
+
+  function showResult(data, id) {
+    const card = document.getElementById('result-card');
+    card.style.display = 'block';
+
+    if (data.ok) {
+      card.className = 'visible ok';
+      document.getElementById('result-status').textContent = 'Acceso permitido';
+      document.getElementById('result-name').textContent = data.nombre || id;
+      document.getElementById('result-company').textContent = data.empresa || '';
+      document.getElementById('result-mark').textContent = '✓';
+      document.getElementById('result-msg').textContent = 'Invitado confirmado. Puede ingresar.';
+      addHistory(data.nombre || id, true);
+    } else {
+      card.className = 'visible fail';
+      document.getElementById('result-status').textContent = 'Acceso denegado';
+      document.getElementById('result-name').textContent = data.nombre || 'Desconocido';
+      document.getElementById('result-company').textContent = data.empresa || '';
+      document.getElementById('result-mark').textContent = '✕';
+      document.getElementById('result-msg').textContent = data.error || 'Este código no está confirmado.';
+      addHistory(data.nombre || id, false);
+    }
+  }
+
+  function addHistory(name, ok) {
+    const now = new Date();
+    const time = now.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+    history.unshift({ name, ok, time });
+    if (history.length > 10) history.pop();
+    renderHistory();
+  }
+
+  function renderHistory() {
+    const list = document.getElementById('history-list');
+    if (history.length === 0) {
+      list.innerHTML = '<p class="no-history">Sin ingresos registrados aún.</p>';
+      return;
+    }
+    list.innerHTML = history.map(h => `
+      <div class="history-item">
+        <div class="history-dot ${h.ok ? 'ok' : 'fail'}"></div>
+        <div class="history-name">${h.name}</div>
+        <div class="history-time">${h.time}</div>
+      </div>
+    `).join('');
+  }
+</script>
+
+</body>
+</html>

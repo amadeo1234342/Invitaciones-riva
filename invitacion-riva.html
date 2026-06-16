@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>100 Años Riva — Invitación</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #ffffff;
+    color: #1a1a1a;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+
+  .page { width: 100%; max-width: 520px; }
+
+  /* Hero */
+  .hero {
+    background: #003865;
+    border-radius: 8px;
+    text-align: center;
+    padding: 3.5rem 2rem 3rem;
+    margin-bottom: 2rem;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 2rem;
+  }
+
+  .logo-riva {
+    font-family: 'Futura', 'Century Gothic', 'Trebuchet MS', sans-serif;
+    font-size: clamp(52px, 16vw, 80px);
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    color: #ffffff;
+    line-height: 1;
+    display: block;
+    margin-bottom: 0.5rem;
+    text-transform: lowercase;
+  }
+
+  .year-mark {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+
+  .tagline {
+    font-size: 14px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.7;
+  }
+
+  /* Event details */
+  .event-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: #e8e8e8;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+
+  .detail-cell {
+    background: #ffffff;
+    padding: 1.25rem;
+  }
+
+  .detail-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #aaaaaa;
+    margin-bottom: 6px;
+  }
+
+  .detail-value {
+    font-size: 15px;
+    font-weight: 500;
+    color: #1a1a1a;
+  }
+
+  /* Guest card */
+  .guest-section { margin-bottom: 1.5rem; }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #aaaaaa;
+    margin-bottom: 0.75rem;
+  }
+
+  #guest-info {
+    background: #f5f7fa;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    padding: 1.5rem;
+  }
+
+  #guest-name {
+    font-size: 22px;
+    font-weight: 500;
+    color: #1a1a1a;
+    margin-bottom: 4px;
+  }
+
+  #guest-company {
+    font-size: 13px;
+    color: #888888;
+  }
+
+  /* States */
+  .state { display: none; }
+  .state.active { display: block; }
+
+  #state-loading { text-align: center; padding: 2rem; color: #aaaaaa; font-size: 14px; }
+
+  #state-error { text-align: center; padding: 2rem; }
+  #state-error p { color: #cc4444; font-size: 14px; line-height: 1.6; }
+
+  /* Confirm button */
+  .confirm-btn {
+    width: 100%;
+    padding: 1rem;
+    background: #003865;
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    margin-bottom: 1rem;
+  }
+
+  .confirm-btn:hover { background: #004a82; }
+  .confirm-btn:active { transform: scale(0.98); }
+  .confirm-btn:disabled { background: #cccccc; color: #888888; cursor: not-allowed; }
+
+  .decline-btn {
+    width: 100%;
+    padding: 0.75rem;
+    background: transparent;
+    color: #aaaaaa;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .decline-btn:hover { border-color: #aaaaaa; color: #555555; }
+
+  /* Confirmed state */
+  #state-confirmed {
+    text-align: center;
+    padding: 2rem;
+    background: #f5f7fa;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+  }
+
+  #state-confirmed .confirmed-icon {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: #003865;
+    color: #fff;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+  }
+
+  #state-confirmed h3 {
+    font-size: 20px;
+    font-weight: 500;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+  }
+
+  #state-confirmed p {
+    font-size: 13px;
+    color: #888888;
+    line-height: 1.6;
+  }
+
+  /* QR */
+  #qr-section { margin-top: 1.5rem; display: none; }
+  #qr-section.visible { display: block; }
+
+  #qr-canvas-wrapper {
+    display: inline-block;
+    background: #ffffff;
+    padding: 16px;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+  }
+
+  #qr-canvas-wrapper canvas { display: block; }
+
+  .qr-hint {
+    font-size: 12px;
+    color: #aaaaaa;
+    line-height: 1.6;
+  }
+
+  /* Declined */
+  #state-declined {
+    text-align: center;
+    padding: 2rem;
+    background: #f5f7fa;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+  }
+
+  #state-declined p { font-size: 14px; color: #888888; line-height: 1.6; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eeeeee;
+    font-size: 11px;
+    color: #cccccc;
+    letter-spacing: 0.1em;
+  }
+
+  @media (max-width: 400px) {
+    .event-details { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="hero">
+    <p class="eyebrow">Celebración aniversario</p>
+    <span class="logo-riva">riva</span>
+    <span class="year-mark">100 años</span>
+    <p class="tagline">Un siglo construyendo el futuro.<br>Los invitamos a celebrar con nosotros.</p>
+  </div>
+
+  <div class="event-details">
+    <div class="detail-cell">
+      <div class="detail-label">Fecha</div>
+      <div class="detail-value" id="detail-fecha">A confirmar</div>
+    </div>
+    <div class="detail-cell">
+      <div class="detail-label">Hora</div>
+      <div class="detail-value" id="detail-hora">A confirmar</div>
+    </div>
+    <div class="detail-cell" style="grid-column: 1 / -1;">
+      <div class="detail-label">Lugar</div>
+      <div class="detail-value" id="detail-lugar">A confirmar</div>
+    </div>
+  </div>
+
+  <div id="state-loading" class="state active">
+    <p>Cargando tu invitación…</p>
+  </div>
+
+  <div id="state-error" class="state">
+    <p>No encontramos tu invitación.<br>Verificá que el link sea correcto o contactá a Riva.</p>
+  </div>
+
+  <div id="state-main" class="state">
+    <div class="guest-section">
+      <div class="section-label">Tu invitación</div>
+      <div id="guest-info">
+        <div id="guest-name"></div>
+        <div id="guest-company"></div>
+      </div>
+    </div>
+
+    <button class="confirm-btn" id="btn-confirm">Confirmar asistencia</button>
+    <button class="decline-btn" id="btn-decline">No voy a poder asistir</button>
+  </div>
+
+  <div id="state-confirmed" class="state">
+    <div class="confirmed-icon">✓</div>
+    <h3>¡Nos vemos en el evento!</h3>
+    <p>Tu lugar está reservado.<br>Presentá este código en la entrada.</p>
+
+    <div id="qr-section" class="visible">
+      <div class="section-label" style="margin-top:1.5rem;">Tu código de acceso</div>
+      <div id="qr-canvas-wrapper">
+        <canvas id="qr-canvas"></canvas>
+      </div>
+      <p class="qr-hint">Guardá una captura de pantalla<br>o mostralo directamente desde tu celular.</p>
+    </div>
+  </div>
+
+  <div id="state-declined" class="state">
+    <p>Gracias por avisarnos.<br>Esperamos verte en una próxima oportunidad.</p>
+  </div>
+
+  <div class="footer">
+    &copy; 2025 Riva &mdash; 100 años
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzp0L4r95aQWrXroaZnT5Hv-SaEZGlFqw4U17ssRuEXHlSBjpnyKRTHHdB6HgWAnfQk/exec";
+
+  function show(id) {
+    document.querySelectorAll('.state').forEach(el => el.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function getParam(name) {
+    return new URLSearchParams(window.location.search).get(name);
+  }
+
+  function renderQR(id) {
+    const canvas = document.getElementById('qr-canvas');
+    new QRCode(canvas, {
+      text: id,
+      width: 200,
+      height: 200,
+      colorDark: "#003865",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
+    });
+  }
+
+  async function init() {
+    const id = getParam('id');
+    if (!id) { show('state-error'); return; }
+
+    try {
+      const res = await fetch(`${SCRIPT_URL}?action=getGuest&id=${encodeURIComponent(id)}`);
+      const data = await res.json();
+
+      if (!data.ok) { show('state-error'); return; }
+
+      document.getElementById('guest-name').textContent = data.nombre;
+      document.getElementById('guest-company').textContent = data.empresa || '';
+
+      if (data.estado === 'CONFIRMADO') {
+        show('state-confirmed');
+        renderQR(id);
+        return;
+      }
+
+      show('state-main');
+
+      document.getElementById('btn-confirm').addEventListener('click', async () => {
+        const btn = document.getElementById('btn-confirm');
+        btn.disabled = true;
+        btn.textContent = 'Confirmando…';
+        try {
+          const r = await fetch(`${SCRIPT_URL}?action=confirm&id=${encodeURIComponent(id)}`);
+          const d = await r.json();
+          if (d.ok) {
+            show('state-confirmed');
+            renderQR(id);
+          } else {
+            btn.disabled = false;
+            btn.textContent = 'Confirmar asistencia';
+            alert('Hubo un error. Intentá de nuevo.');
+          }
+        } catch {
+          btn.disabled = false;
+          btn.textContent = 'Confirmar asistencia';
+          alert('Error de conexión. Intentá de nuevo.');
+        }
+      });
+
+      document.getElementById('btn-decline').addEventListener('click', () => {
+        show('state-declined');
+      });
+
+    } catch {
+      show('state-error');
+    }
+  }
+
+  init();
+</script>
+
+</body>
+</html>
