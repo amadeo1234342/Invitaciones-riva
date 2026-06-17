@@ -272,8 +272,9 @@
       if (!scanning) return;
       scanning = false;
       scanner.pause();
-     alert('[' + decodedText + ']');
-validate(decodedText.trim());
+     alert('QR=' + decodedText);
+
+validate('INV01');
     },
     () => {}
   ).catch(() => {
