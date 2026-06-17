@@ -299,13 +299,51 @@
     try { scanner.resume(); } catch {}
   });
 
+
+  let jsonpCounter = 0;
+
+  function jsonpRequest(params) {
+    return new Promise((resolve, reject) => {
+      const callbackName = 'jsonp_cb_' + (jsonpCounter++);
+      const script = document.createElement('script');
+
+      window[callbackName] = (data) => {
+        resolve(data);
+        delete window[callbackName];
+        script.remove();
+      };
+
+      const query = new URLSearchParams({
+        ...params,
+        callback: callbackName
+      }).toString();
+
+      script.src = `${SCRIPT_URL}?${query}`;
+
+      script.onerror = () => {
+        reject(new Error('JSONP request failed'));
+        delete window[callbackName];
+        script.remove();
+      };
+
+      document.body.appendChild(script);
+    });
+  }
+
   async function validate(id) {
     try {
-      const res = await fetch(`${SCRIPT_URL}?action=validate&id=${encodeURIComponent(id)}`);
-      const data = await res.json();
+      const data = await jsonpRequest({
+        action: 'validate',
+        id
+      });
+
       showResult(data, id);
+
     } catch {
-      showResult({ ok: false, error: 'Error de conexión' }, id);
+      showResult({
+        ok: false,
+        error: 'Error de conexión'
+      }, id);
     }
   }
 
