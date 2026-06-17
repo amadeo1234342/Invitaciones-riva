@@ -272,7 +272,8 @@
       if (!scanning) return;
       scanning = false;
       scanner.pause();
-      validate(decodedText.trim());
+     alert('[' + decodedText + ']');
+validate(decodedText.trim());
     },
     () => {}
   ).catch(() => {
