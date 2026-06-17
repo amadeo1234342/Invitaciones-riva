@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>100 Años Riva — Control de acceso</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -32,36 +33,23 @@
   }
 
   .header-logo {
-    font-family: 'Futura', 'Century Gothic', 'Trebuchet MS', sans-serif;
     font-size: 28px;
-    font-weight: 400;
-    letter-spacing: 0.08em;
-    color: #ffffff;
+    color: #fff;
     text-transform: lowercase;
-    line-height: 1;
   }
 
   .header-sub {
     font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.45);
-    margin-top: 4px;
+    color: rgba(255,255,255,0.6);
   }
 
   .badge {
     font-size: 10px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.2);
     color: rgba(255,255,255,0.6);
-    padding: 5px 10px;
-    border-radius: 4px;
   }
 
   .card {
-    background: #ffffff;
+    background: #fff;
     border: 1px solid #e8e8e8;
     border-radius: 8px;
     overflow: hidden;
@@ -70,143 +58,62 @@
 
   .card-label {
     font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: #aaaaaa;
-    padding: 1rem 1.25rem 0.75rem;
-    border-bottom: 1px solid #f0f0f0;
+    padding: 1rem;
+    color: #aaa;
+    border-bottom: 1px solid #eee;
   }
 
-  #reader { width: 100%; min-height: 260px; background: #f5f7fa; }
-  #reader video { width: 100% !important; }
+  #reader { width: 100%; min-height: 260px; }
 
   .scanner-hint {
-    padding: 0.75rem 1.25rem;
+    padding: 0.75rem;
     font-size: 12px;
-    color: #cccccc;
     text-align: center;
+    color: #ccc;
   }
 
-  /* Manual */
-  .manual-body { padding: 1rem 1.25rem; }
+  .manual-body { padding: 1rem; }
 
   .manual-row { display: flex; gap: 8px; }
 
   #manual-input {
     flex: 1;
-    background: #f5f7fa;
-    border: 1px solid #e0e0e0;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
     border-radius: 6px;
-    padding: 0.75rem 1rem;
-    color: #1a1a1a;
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.2s;
   }
 
-  #manual-input:focus { border-color: #003865; }
-  #manual-input::placeholder { color: #cccccc; }
-
   .validate-btn {
-    padding: 0.75rem 1.25rem;
+    padding: 0.75rem 1rem;
     background: #003865;
-    color: #ffffff;
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    color: #fff;
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    transition: background 0.2s;
-    white-space: nowrap;
   }
 
-  .validate-btn:hover { background: #004a82; }
+  #result-card { display: none; margin-bottom: 1rem; border-radius: 8px; }
 
-  /* Result */
-  #result-card { display: none; border-radius: 8px; overflow: hidden; margin-bottom: 1rem; }
   #result-card.visible { display: block; }
-
-  .result-inner { padding: 1.5rem; }
 
   #result-card.ok { background: #edf7f1; border: 1px solid #b3dfc4; }
   #result-card.fail { background: #fdf0f0; border: 1px solid #f0c0c0; }
 
-  .result-top { display: flex; align-items: flex-start; justify-content: space-between; }
+  .result-inner { padding: 1.5rem; }
 
-  .result-status {
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    margin-bottom: 0.5rem;
-  }
-
-  #result-card.ok .result-status { color: #2a7a4a; }
-  #result-card.fail .result-status { color: #aa3333; }
-
-  .result-name { font-size: 24px; font-weight: 500; color: #1a1a1a; margin-bottom: 2px; }
-  .result-company { font-size: 13px; color: #888888; margin-bottom: 0.75rem; }
-  .result-msg { font-size: 13px; color: #888888; }
-
-  .result-mark { font-size: 44px; line-height: 1; }
-  #result-card.ok .result-mark { color: #2a7a4a; }
-  #result-card.fail .result-mark { color: #aa3333; }
+  .result-mark { font-size: 40px; }
 
   .reset-btn {
     width: 100%;
     margin-top: 1rem;
     padding: 0.75rem;
+    border: 1px solid #ddd;
     background: transparent;
-    border: 1px solid #dddddd;
-    border-radius: 6px;
-    color: #aaaaaa;
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
     cursor: pointer;
-    transition: border-color 0.2s, color 0.2s;
   }
-
-  .reset-btn:hover { border-color: #aaaaaa; color: #555555; }
-
-  /* History */
-  .history-section { margin-top: 0.5rem; }
-
-  .history-label {
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: #cccccc;
-    margin-bottom: 0.75rem;
-    padding: 0 0.25rem;
-  }
-
-  #history-list { display: flex; flex-direction: column; gap: 6px; }
-
-  .history-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    background: #ffffff;
-    border-radius: 6px;
-    border: 1px solid #eeeeee;
-  }
-
-  .history-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .history-dot.ok { background: #2a9a5a; }
-  .history-dot.fail { background: #cc4444; }
-
-  .history-name { font-size: 13px; color: #333333; flex: 1; }
-  .history-time { font-size: 11px; color: #cccccc; }
-
-  .no-history { font-size: 13px; color: #cccccc; font-style: italic; padding: 0.25rem; }
 </style>
 </head>
+
 <body>
 
 <div class="page">
@@ -222,178 +129,154 @@
   <div class="card">
     <div class="card-label">Escáner de cámara</div>
     <div id="reader"></div>
-    <div class="scanner-hint">Apuntá la cámara al código QR del invitado</div>
+    <div class="scanner-hint">Apuntá al QR</div>
   </div>
 
   <div class="card">
     <div class="card-label">Ingreso manual</div>
     <div class="manual-body">
       <div class="manual-row">
-        <input type="text" id="manual-input" placeholder="Código del invitado" autocomplete="off" />
-        <button class="validate-btn" id="btn-validate">Validar</button>
+        <input id="manual-input" placeholder="Código" />
+        <button class="validate-btn" id="btn-validate">OK</button>
       </div>
     </div>
   </div>
 
   <div id="result-card">
     <div class="result-inner">
-      <div class="result-top">
-        <div>
-          <div class="result-status" id="result-status"></div>
-          <div class="result-name" id="result-name"></div>
-          <div class="result-company" id="result-company"></div>
-          <div class="result-msg" id="result-msg"></div>
-        </div>
-        <div class="result-mark" id="result-mark"></div>
-      </div>
+      <div id="result-status"></div>
+      <div id="result-name"></div>
+      <div id="result-company"></div>
+      <div id="result-msg"></div>
+      <div class="result-mark" id="result-mark"></div>
+
       <button class="reset-btn" id="btn-reset">Escanear otro</button>
     </div>
-  </div>
-
-  <div class="history-section">
-    <div class="history-label">Últimos ingresos</div>
-    <div id="history-list"><p class="no-history">Sin ingresos registrados aún.</p></div>
   </div>
 
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzp0L4r95aQWrXroaZnT5Hv-SaEZGlFqw4U17ssRuEXHlSBjpnyKRTHHdB6HgWAnfQk/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzp0L4r95aQWrXroaZnT5Hv-SaEZGlFqw4U17ssRuEXHlSBjpnyKRTHHdB6HgWAnfQk/exec";
 
-  const history = [];
-  let scanning = true;
+let scanning = true;
+let jsonpCounter = 0;
 
-  const scanner = new Html5Qrcode("reader");
-  scanner.start(
-    { facingMode: "environment" },
-    { fps: 10, qrbox: { width: 220, height: 220 } },
-    (decodedText) => {
-      if (!scanning) return;
-      scanning = false;
-      scanner.pause();
-validate(decodedText.trim());
+const scanner = new Html5Qrcode("reader");
 
-
-    },
-    () => {}
-  ).catch(() => {
-    document.getElementById('reader').innerHTML = '<p style="color:#cccccc;font-size:13px;text-align:center;padding:2rem;">Cámara no disponible.<br>Usá el ingreso manual.</p>';
-  });
-
-  document.getElementById('btn-validate').addEventListener('click', () => {
-    const val = document.getElementById('manual-input').value.trim();
-    if (!val) return;
-    validate(val);
-  });
-
-  document.getElementById('manual-input').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      const val = e.target.value.trim();
-      if (val) validate(val);
-    }
-  });
-
-  document.getElementById('btn-reset').addEventListener('click', () => {
-    document.getElementById('result-card').className = '';
-    document.getElementById('manual-input').value = '';
-    scanning = true;
-    try { scanner.resume(); } catch {}
-  });
+scanner.start(
+  { facingMode: "environment" },
+  { fps: 10, qrbox: 220 },
+  onScanSuccess
+).catch(err => {
+  console.log(err);
+});
 
 
-  let jsonpCounter = 0;
+// 🔥 FIX PRINCIPAL
+function onScanSuccess(decodedText) {
+  if (!scanning) return;
 
-  function jsonpRequest(params) {
-    return new Promise((resolve, reject) => {
-      const callbackName = 'jsonp_cb_' + (jsonpCounter++);
-      const script = document.createElement('script');
+  scanning = false;
 
-      window[callbackName] = (data) => {
-        resolve(data);
-        delete window[callbackName];
-        script.remove();
-      };
+  const id = decodedText.trim().replace(/\s/g, "");
 
-      const query = new URLSearchParams({
-        ...params,
-        callback: callbackName
-      }).toString();
+  console.log("QR detectado:", id);
 
-      script.src = `${SCRIPT_URL}?${query}`;
+  // 🔴 clave: cortar cámara ANTES de validar
+  scanner.pause();
 
-      script.onerror = () => {
-        reject(new Error('JSONP request failed'));
-        delete window[callbackName];
-        script.remove();
-      };
+  validate(id);
+}
 
-      document.body.appendChild(script);
+
+// -------------------------
+// VALIDACIÓN (JSONP)
+// -------------------------
+function jsonpRequest(params) {
+  return new Promise((resolve, reject) => {
+    const callbackName = 'cb_' + jsonpCounter++;
+    const script = document.createElement('script');
+
+    window[callbackName] = (data) => {
+      resolve(data);
+      delete window[callbackName];
+      script.remove();
+    };
+
+    const query = new URLSearchParams({
+      ...params,
+      callback: callbackName
     });
+
+    script.src = SCRIPT_URL + "?" + query;
+
+    script.onerror = reject;
+
+    document.body.appendChild(script);
+  });
+}
+
+async function validate(id) {
+  try {
+    const data = await jsonpRequest({
+      action: "validate",
+      id
+    });
+
+    showResult(data, id);
+
+  } catch (e) {
+    showResult({ ok: false, error: "Error de conexión" }, id);
   }
+}
 
-  async function validate(id) {
-    try {
-      const data = await jsonpRequest({
-        action: 'validate',
-        id
-      });
 
-      showResult(data, id);
+// -------------------------
+// RESULTADO
+// -------------------------
+function showResult(data, id) {
+  const card = document.getElementById("result-card");
+  card.style.display = "block";
+  card.className = "visible " + (data.ok ? "ok" : "fail");
 
-    } catch {
-      showResult({
-        ok: false,
-        error: 'Error de conexión'
-      }, id);
-    }
+  document.getElementById("result-status").textContent =
+    data.ok ? "Acceso permitido" : "Acceso denegado";
+
+  document.getElementById("result-name").textContent =
+    data.nombre || id;
+
+  document.getElementById("result-company").textContent =
+    data.empresa || "";
+
+  document.getElementById("result-mark").textContent =
+    data.ok ? "✓" : "✕";
+
+  document.getElementById("result-msg").textContent =
+    data.ok ? "Ingreso autorizado" : (data.error || "Rechazado");
+
+  setTimeout(() => {
+    scanning = true;
+  }, 2000);
+}
+
+
+// -------------------------
+// RESET
+// -------------------------
+document.getElementById("btn-reset").addEventListener("click", async () => {
+  document.getElementById("result-card").style.display = "none";
+  scanning = true;
+
+  try {
+    await scanner.resume();
+  } catch (e) {
+    console.log(e);
   }
+});
 
-  function showResult(data, id) {
-    const card = document.getElementById('result-card');
-    card.style.display = 'block';
-
-    if (data.ok) {
-      card.className = 'visible ok';
-      document.getElementById('result-status').textContent = 'Acceso permitido';
-      document.getElementById('result-name').textContent = data.nombre || id;
-      document.getElementById('result-company').textContent = data.empresa || '';
-      document.getElementById('result-mark').textContent = '✓';
-      document.getElementById('result-msg').textContent = 'Invitado confirmado. Puede ingresar.';
-      addHistory(data.nombre || id, true);
-    } else {
-      card.className = 'visible fail';
-      document.getElementById('result-status').textContent = 'Acceso denegado';
-      document.getElementById('result-name').textContent = data.nombre || 'Desconocido';
-      document.getElementById('result-company').textContent = data.empresa || '';
-      document.getElementById('result-mark').textContent = '✕';
-      document.getElementById('result-msg').textContent = data.error || 'Este código no está confirmado.';
-      addHistory(data.nombre || id, false);
-    }
-  }
-
-  function addHistory(name, ok) {
-    const now = new Date();
-    const time = now.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
-    history.unshift({ name, ok, time });
-    if (history.length > 10) history.pop();
-    renderHistory();
-  }
-
-  function renderHistory() {
-    const list = document.getElementById('history-list');
-    if (history.length === 0) {
-      list.innerHTML = '<p class="no-history">Sin ingresos registrados aún.</p>';
-      return;
-    }
-    list.innerHTML = history.map(h => `
-      <div class="history-item">
-        <div class="history-dot ${h.ok ? 'ok' : 'fail'}"></div>
-        <div class="history-name">${h.name}</div>
-        <div class="history-time">${h.time}</div>
-      </div>
-    `).join('');
-  }
 </script>
 
 </body>
