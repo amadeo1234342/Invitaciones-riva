@@ -175,7 +175,6 @@ scanner.start(
 });
 
 
-// 🔥 FIX PRINCIPAL
 function onScanSuccess(decodedText) {
   if (!scanning) return;
 
@@ -183,12 +182,12 @@ function onScanSuccess(decodedText) {
 
   const id = decodedText.trim().replace(/\s/g, "");
 
-  console.log("QR detectado:", id);
+  console.log("QR:", id);
 
-  // 🔴 clave: cortar cámara ANTES de validar
-  scanner.pause();
-
-  validate(id);
+  // 🔴 ESTO ES LO CLAVE
+  scanner.clear().then(() => {
+    validate(id);
+  });
 }
 
 
