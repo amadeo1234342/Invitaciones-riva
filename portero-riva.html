@@ -272,7 +272,11 @@
       if (!scanning) return;
       scanning = false;
       scanner.pause();
-    validate(decodedText.trim());
+console.log(decodedText);
+console.log(decodedText.length);
+console.log([...decodedText].map(c => c.charCodeAt(0)));
+
+validate(decodedText.trim());
 
 
     },
